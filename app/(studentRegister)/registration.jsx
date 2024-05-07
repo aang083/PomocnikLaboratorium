@@ -1,4 +1,4 @@
-import { View, Text, ScrollView, Alert } from "react-native";
+import { View, Text, ScrollView, FlatList, Alert } from "react-native";
 import { useState } from "react";
 import { Link, router } from "expo-router";
 import { SafeAreaView } from 'react-native-safe-area-context'
@@ -16,12 +16,15 @@ const Registration = () => {
   return (
     <SafeAreaView className="bg-primary h-full">
       <ScrollView>
-        <View className="w-full flex h-full px-2">
-          <View className="w-full flex flex-row space-x-5">
-            <Text className="flex text-2xl font-semibold text-white mt-5">
+        <View className="flex flex-col w-full h-full px-2"> 
+          <View className="w-full flex flex-row">
+            <Text className="flex grow text-2xl font-semibold text-white mt-5">
               ZAPIS STUDENTÓW
             </Text>
-            <CustomButton title="Generuj listę" handlePress={generate} containerStyles="bg-quaternary"/>
+            <CustomButton title="Generuj listę" handlePress={generate} containerStyles="bg-quaternary grow mt-3"/>
+          </View>
+          <View className="w-full bg-alerrt h-2/5">
+            {/* <FlatList></FlatList> */}
           </View>
         </View>
       </ScrollView>

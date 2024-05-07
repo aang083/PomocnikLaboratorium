@@ -8,6 +8,7 @@ module.exports = {
         secondary: "#B3B3B3",
         tertiary: "#FFFFFF",
         quaternary: "#5A91E0",
+        alerrt: "#E32323",
       },
     },
   },
