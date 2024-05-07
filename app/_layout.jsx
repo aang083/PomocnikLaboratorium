@@ -1,15 +1,13 @@
-import StartScreen from "./StartScreen";
-// import ConfiScreen from "./modules/ConfiScreen";
-// import GraduationScreen from "./modules/GraduationScreen";
-// import SectionGraduationScreen from "./modules/SectionGraduationScreen";
 import React from "react";
 import { Stack } from "expo-router";
 
 const AppLayout = () => {
   return (
     <Stack>
-      <StartScreen name="index" options={{headerShown: false}} />
-      <StartScreen name="StartScreen" options={{headerShown: false}} />
+      <Stack.Screen name="index" options={{headerShown: false}} />
+      <Stack.Screen name="(labConfig)" options={{headerShown: false}} />
+      <Stack.Screen name="(studentAssessment)" options={{headerShown: false}} />
+      <Stack.Screen name="(studentRegister)" options={{headerShown: false}} />
     </Stack>
   );
 }
