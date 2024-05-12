@@ -36,18 +36,19 @@ const Registration = () => {
       Alert.alert('Błąd', 'Proszę wypełnić wszystkie pola!')
     }else{
       await AsyncStorage.setItem(STORAGE_KEY, JSON.stringify(form));
-      Alert.alert("Test", `Zapisano : ${test()}`)
+      test();
     }
   }
 
   const test = async () => {
     try {
       const jsonValue = await AsyncStorage.getItem(STORAGE_KEY);
-      return jsonValue != null ? JSON.parse(jsonValue) : null;
+      Alert.alert("Test", `Zapisano : ${jsonValue}`)
     } catch (e) {
       console.log(e);
     }
   }
+  
   return (
     <SafeAreaView className="bg-primary h-full">
       <ScrollView>
