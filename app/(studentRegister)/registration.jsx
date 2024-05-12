@@ -33,9 +33,19 @@ const Registration = () => {
   }
   const formSubmit = async () => {
     if(!form.name || !form.surname || !form.IDPC){
-      Alert.alert('Błąd', 'Proszę wypełnić wszysttkie pola!')
+      Alert.alert('Błąd', 'Proszę wypełnić wszystkie pola!')
     }else{
-      const savedSections = await AsyncStorage.getItem(STORAGE_KEY);
+      await AsyncStorage.setItem(STORAGE_KEY, JSON.stringify(form));
+      Alert.alert("Test", `Zapisano : ${test()}`)
+    }
+  }
+
+  const test = async () => {
+    try {
+      const jsonValue = await AsyncStorage.getItem(STORAGE_KEY);
+      return jsonValue != null ? JSON.parse(jsonValue) : null;
+    } catch (e) {
+      console.log(e);
     }
   }
   return (
