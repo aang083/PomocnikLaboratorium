@@ -1,4 +1,4 @@
-import { View, Text, ScrollView, FlatList, Alert } from "react-native";
+import { View, Text, ScrollView, VirtualizedList, Alert } from "react-native";
 import { useState } from "react";
 import { Link, router } from "expo-router";
 import { SafeAreaView } from 'react-native-safe-area-context'
@@ -15,6 +15,9 @@ const Registration = () => {
     surname: "",
     IDPC:""
   });
+
+  const [savedStudents, setSavedStudents] = useState([]);
+
   const generate = () => {
 
   }
@@ -23,11 +26,11 @@ const Registration = () => {
 
   }
 
-  const renederItem = () => {
+  const renderItem = ({item}) => {
     <Tile 
-      name={form.name}
-      surname={form.surname}
-      IDPC={form.IDPC}
+      name={item.name}
+      surname={item.surname}
+      IDPC={item.IDPC}
       onRemove={handleDelete}
     />
   }
@@ -35,8 +38,13 @@ const Registration = () => {
     if(!form.name || !form.surname || !form.IDPC){
       Alert.alert('Błąd', 'Proszę wypełnić wszystkie pola!')
     }else{
-      await AsyncStorage.setItem(STORAGE_KEY, JSON.stringify(form));
-      test();
+      try {
+        await AsyncStorage.setItem(STORAGE_KEY, JSON.stringify(form));
+        setSavedStudents(form);
+        test();
+      } catch (error) {
+        console.error("Błąd podczas zapisywania danych:", error);
+      }
     }
   }
 
@@ -48,6 +56,12 @@ const Registration = () => {
       console.log(e);
     }
   }
+
+  const getItemCount = _data => 50;
+
+  const getItem = (index) => ({
+    title: `Item ${index + 1}`,
+  });
   
   return (
     <SafeAreaView className="bg-primary h-full">
@@ -59,12 +73,6 @@ const Registration = () => {
             </Text>
             <CustomButton title="Generuj listę" handlePress={generate} containerStyles="bg-quaternary grow mt-3"/>
           </View>
-          <View className="w-full bg-alerrt ">
-            <FlatList 
-              data={form}
-              renderItem={renederItem}
-            />
-          </View> 
           <View className="mb-2"> 
             <FormField 
               title="Imię"
@@ -83,6 +91,15 @@ const Registration = () => {
             />
           </View>
           <CustomButton title="Zapisz" handlePress={formSubmit} containerStyles="bg-quaternary"/>
+          <View className="w-full">
+            <VirtualizedList 
+              data={savedStudents}
+              renderItem={renderItem}
+              getItemCount={getItemCount}
+              keyExtractor={(item, index) => index.toString()}
+              getItem={getItem}
+            />
+          </View> 
         </View>
       </ScrollView>
     </SafeAreaView>
