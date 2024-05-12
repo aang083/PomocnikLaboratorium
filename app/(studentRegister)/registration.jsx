@@ -7,6 +7,8 @@ import Tile from "../../components/Tile";
 import FormField from "../../components/FormField";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
+const STORAGE_KEY = "sectionList";
+
 const Registration = () => {
   const [form, setForm] = useState({
     name: "",
@@ -32,6 +34,8 @@ const Registration = () => {
   const formSubmit = async () => {
     if(!form.name || !form.surname || !form.IDPC){
       Alert.alert('Błąd', 'Proszę wypełnić wszysttkie pola!')
+    }else{
+      const savedSections = await AsyncStorage.getItem(STORAGE_KEY);
     }
   }
   return (
@@ -67,7 +71,7 @@ const Registration = () => {
               handleChangeText = {(e) => setForm({...form, IDPC: e})}
             />
           </View>
-          <CustomButton title="Zapisz" handlePress={formSubmit}/>
+          <CustomButton title="Zapisz" handlePress={formSubmit} containerStyles="bg-quaternary"/>
         </View>
       </ScrollView>
     </SafeAreaView>

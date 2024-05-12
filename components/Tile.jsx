@@ -4,7 +4,8 @@ import React from 'react'
 const Tile = ( {name, surname, onRemove, IDPC}) => {
   return (
     <View>
-      <Text>{name} {surname} {IDPC}<Button title="X" onPress={onRemove}/></Text>
+      <Text>{name} {surname} {IDPC}<Button title="X" onPress={onRemove}/>
+      </Text>
     </View>
   )
 }
