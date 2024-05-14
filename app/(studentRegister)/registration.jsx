@@ -1,5 +1,5 @@
-import { View, Text, ScrollView, VirtualizedList, Alert } from "react-native";
-import { useState } from "react";
+import { View, Text, ScrollView, Alert, FlatList } from "react-native";
+import { useState, useEffect } from "react";
 import { Link, router } from "expo-router";
 import { SafeAreaView } from 'react-native-safe-area-context'
 import CustomButton from "../../components/CustomButton";
@@ -10,11 +10,9 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 const STORAGE_KEY = "sectionList";
 
 const Registration = () => {
-  const [form, setForm] = useState({
-    name: "",
-    surname: "",
-    IDPC:""
-  });
+  const [name, setName] = useState('');
+  const [surname, setSurname] = useState('');
+  const [pcid, setPcid] = useState('');
 
   const [savedStudents, setSavedStudents] = useState([]);
 
@@ -26,46 +24,29 @@ const Registration = () => {
 
   }
 
-  const renderItem = ({item}) => {
-    <Tile 
-      name={item.name}
-      surname={item.surname}
-      IDPC={item.IDPC}
-      onRemove={handleDelete}
-    />
-  }
+  const renderItem = ({ item }) => (
+    <Text key={item.id}>{`${item.firstName} ${item.lastName}`}</Text>
+  );
+  
   const formSubmit = async () => {
-    if(!form.name || !form.surname || !form.IDPC){
+    if(!name || !surname || !pcid){
       Alert.alert('Błąd', 'Proszę wypełnić wszystkie pola!')
     }else{
-      try {
-        await AsyncStorage.setItem(STORAGE_KEY, JSON.stringify(form));
-        setSavedStudents(form);
-        test();
-      } catch (error) {
-        console.error("Błąd podczas zapisywania danych:", error);
-      }
+      const userId = Date.now().toString();
+      setSavedStudents([...savedStudents, {id: userId, name, surname, pcid}])
+      setName('');
+      setSurname('');
+      setPcid('');
+      handleShowUsers();
     }
   }
-
-  const test = async () => {
-    try {
-      const jsonValue = await AsyncStorage.getItem(STORAGE_KEY);
-      Alert.alert("Test", `Zapisano : ${jsonValue}`)
-    } catch (e) {
-      console.log(e);
-    }
-  }
-
-  const getItemCount = _data => 50;
-
-  const getItem = (index) => ({
-    title: `Item ${index + 1}`,
-  });
+  const handleShowUsers = () => {
+    const usersText = savedStudents.map(() => `${name} ${surname} ${pcid}`).join('\n');
+    Alert.alert('Lista użytkowników', usersText);
+  };
   
   return (
     <SafeAreaView className="bg-primary h-full">
-      <ScrollView>
         <View className="flex flex-col w-full h-full px-2"> 
           <View className="w-full flex flex-row">
             <Text className="flex grow text-2xl font-semibold text-white mt-5">
@@ -73,37 +54,81 @@ const Registration = () => {
             </Text>
             <CustomButton title="Generuj listę" handlePress={generate} containerStyles="bg-quaternary grow mt-3"/>
           </View>
-          <View className="mb-2"> 
+          <View className="mb-2 flex flex-col h-[250]"> 
             <FormField 
               title="Imię"
-              value={form.name}
-              handleChangeText = {(e) => setForm({...form, name: e})}
+              value={name}
+              handleChangeText = {setName}
             />
             <FormField 
               title="Nazwisko"
-              value={form.surname}
-              handleChangeText = {(e) => setForm({...form, surname: e})}
+              value={surname}
+              handleChangeText = {setSurname}
             />
             <FormField 
               title="Nr stanowiska"
-              value={form.IDPC}
-              handleChangeText = {(e) => setForm({...form, IDPC: e})}
+              value={pcid}
+              handleChangeText = {setPcid}
             />
           </View>
           <CustomButton title="Zapisz" handlePress={formSubmit} containerStyles="bg-quaternary"/>
-          <View className="w-full">
-            <VirtualizedList 
-              data={savedStudents}
-              renderItem={renderItem}
-              getItemCount={getItemCount}
-              keyExtractor={(item, index) => index.toString()}
-              getItem={getItem}
-            />
-          </View> 
         </View>
-      </ScrollView>
+        <View className="w-full">
+          <FlatList 
+            data={savedStudents}
+            renderItem={renderItem}
+            keyExtractor={(item) => item.id.toString()}
+          />
+        </View>
     </SafeAreaView>
   )
 }
 
-export default Registration
+export default Registration;
+
+// ------------ może się przyda -------------------
+
+// try {
+//   await AsyncStorage.setItem(STORAGE_KEY, JSON.stringify(form));
+//   setSavedStudents(form);
+//   test();
+// } catch (error) {
+//   console.error("Błąd podczas zapisywania danych:", error);
+// }
+
+// 
+
+// const test = async () => {
+//   try {
+//     const jsonValue = await AsyncStorage.getItem(STORAGE_KEY);
+//     Alert.alert("Zawatosc Async-Storage", `Zapisano : ${jsonValue}`)
+//   } catch (e) {
+//     console.log(e);
+//   }
+// }
+
+  // const renderItem = ({ item }) => {
+  //   return (
+  //     <Tile
+  //       name={item.name}
+  //       surname={item.surname}
+  //       IDPC={item.IDPC}
+  //       onRemove={handleDelete}
+  //     />
+  //   );
+  // };
+
+  
+  // useEffect(() => {
+  //   const loadSavedStudents = async () => {
+  //     try {
+  //       const storedSavedStudents = await AsyncStorage.getItem(STORAGE_KEY);
+  //       if (storedSavedStudents) {
+  //         setSavedStudents(JSON.parse(storedSavedStudents));
+  //       }
+  //     } catch (error) {
+  //       console.error("Błąd podczas wczytywania danych:", error);
+  //     }
+  //   };
+  //   loadSavedStudents();
+  // }, []);
