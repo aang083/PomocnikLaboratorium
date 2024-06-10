@@ -3,7 +3,7 @@ import React from 'react'
 
 const Assessment = () => {
   return (
-    <SafeAreaView>
+    <SafeAreaView className="mt-10">
       <Text>Assessment</Text>
     </SafeAreaView>
   )
