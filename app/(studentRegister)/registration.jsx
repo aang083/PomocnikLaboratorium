@@ -31,7 +31,7 @@ export default function registration() {
   };
 
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: '#1E1E1E'}}>
+    <SafeAreaView style={{ flex: 1, backgroundColor: '#1E1E1E' }}>
       <StyledView className="flex-1 p-4 mt-8">
         <StyledText className="text-white text-3xl mb-4">ZAPIS STUDENTÓW</StyledText>
         <StyledView className="flex-1 mb-4 bg-gray-700 p-4 rounded">
@@ -105,7 +105,6 @@ const styles = StyleSheet.create({
     padding: 10,
     borderRadius: 5,
     alignItems: 'center',
-    
   },
   generateButtonText: {
     color: 'white',
