@@ -6,9 +6,8 @@ import { Link } from 'expo-router';
 const StyledView = styled(View);
 const StyledText = styled(Text);
 const StyledTextInput = styled(TextInput);
-const StyledButton = styled(Button);
 
-export default function HomeScreen() {
+export default function registration() {
   const [students, setStudents] = useState([]);
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
@@ -34,10 +33,10 @@ export default function HomeScreen() {
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: '#1E1E1E'}}>
       <StyledView className="flex-1 p-4 mt-8">
-        <StyledText className="text-white text-2xl mb-4">ZAPIS STUDENTÓW</StyledText>
+        <StyledText className="text-white text-3xl mb-4">ZAPIS STUDENTÓW</StyledText>
         <StyledView className="flex-1 mb-4 bg-gray-700 p-4 rounded">
           {students.length === 0 ? (
-            <StyledText className="text-white text-center">Lista już zapisanych studentów</StyledText>
+            <StyledText className="text-white text-center text-xl">Lista już zapisanych studentów</StyledText>
           ) : (
             <FlatList
               data={students}
