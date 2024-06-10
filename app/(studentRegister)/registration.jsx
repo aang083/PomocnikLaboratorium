@@ -1,109 +1,123 @@
-import { View, Text, ScrollView, VirtualizedList, Alert } from "react-native";
-import { useState } from "react";
-import { Link, router } from "expo-router";
-import { SafeAreaView } from 'react-native-safe-area-context'
-import CustomButton from "../../components/CustomButton";
-import Tile from "../../components/Tile";
-import FormField from "../../components/FormField";
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import React, { useState } from 'react';
+import { View, Text, TextInput, Button, FlatList, StyleSheet, TouchableOpacity, SafeAreaView } from 'react-native';
+import { styled } from 'nativewind';
+import { Link } from 'expo-router';
 
-const STORAGE_KEY = "sectionList";
+const StyledView = styled(View);
+const StyledText = styled(Text);
+const StyledTextInput = styled(TextInput);
+const StyledButton = styled(Button);
 
-const Registration = () => {
-  const [form, setForm] = useState({
-    name: "",
-    surname: "",
-    IDPC:""
-  });
+export default function HomeScreen() {
+  const [students, setStudents] = useState([]);
+  const [firstName, setFirstName] = useState('');
+  const [lastName, setLastName] = useState('');
+  const [position, setPosition] = useState('');
 
-  const [savedStudents, setSavedStudents] = useState([]);
-
-  const generate = () => {
-
-  }
-
-  const handleDelete = () =>{
-
-  }
-
-  const renderItem = ({item}) => {
-    <Tile 
-      name={item.name}
-      surname={item.surname}
-      IDPC={item.IDPC}
-      onRemove={handleDelete}
-    />
-  }
-  const formSubmit = async () => {
-    if(!form.name || !form.surname || !form.IDPC){
-      Alert.alert('Błąd', 'Proszę wypełnić wszystkie pola!')
-    }else{
-      try {
-        await AsyncStorage.setItem(STORAGE_KEY, JSON.stringify(form));
-        setSavedStudents(form);
-        test();
-      } catch (error) {
-        console.error("Błąd podczas zapisywania danych:", error);
-      }
+  const addStudent = () => {
+    if (firstName && lastName && position) {
+      setStudents([...students, { firstName, lastName, position }]);
+      setFirstName('');
+      setLastName('');
+      setPosition('');
+    } else {
+      alert('Proszę wypełnić wszystkie pola');
     }
-  }
+  };
 
-  const test = async () => {
-    try {
-      const jsonValue = await AsyncStorage.getItem(STORAGE_KEY);
-      Alert.alert("Test", `Zapisano : ${jsonValue}`)
-    } catch (e) {
-      console.log(e);
-    }
-  }
+  const removeStudent = (index) => {
+    const newStudents = [...students];
+    newStudents.splice(index, 1);
+    setStudents(newStudents);
+  };
 
-  const getItemCount = _data => 50;
-
-  const getItem = (index) => ({
-    title: `Item ${index + 1}`,
-  });
-  
   return (
-    <SafeAreaView className="bg-primary h-full">
-      <ScrollView>
-        <View className="flex flex-col w-full h-full px-2"> 
-          <View className="w-full flex flex-row">
-            <Text className="flex grow text-2xl font-semibold text-white mt-5">
-              ZAPIS STUDENTÓW
-            </Text>
-            <CustomButton title="Generuj listę" handlePress={generate} containerStyles="bg-quaternary grow mt-3"/>
-          </View>
-          <View className="mb-2"> 
-            <FormField 
-              title="Imię"
-              value={form.name}
-              handleChangeText = {(e) => setForm({...form, name: e})}
-            />
-            <FormField 
-              title="Nazwisko"
-              value={form.surname}
-              handleChangeText = {(e) => setForm({...form, surname: e})}
-            />
-            <FormField 
-              title="Nr stanowiska"
-              value={form.IDPC}
-              handleChangeText = {(e) => setForm({...form, IDPC: e})}
-            />
-          </View>
-          <CustomButton title="Zapisz" handlePress={formSubmit} containerStyles="bg-quaternary"/>
-          <View className="w-full">
-            <VirtualizedList 
-              data={savedStudents}
-              renderItem={renderItem}
-              getItemCount={getItemCount}
+    <SafeAreaView style={{ flex: 1, backgroundColor: '#1E1E1E'}}>
+      <StyledView className="flex-1 p-4 mt-8">
+        <StyledText className="text-white text-2xl mb-4">ZAPIS STUDENTÓW</StyledText>
+        <StyledView className="flex-1 mb-4 bg-gray-700 p-4 rounded">
+          {students.length === 0 ? (
+            <StyledText className="text-white text-center">Lista już zapisanych studentów</StyledText>
+          ) : (
+            <FlatList
+              data={students}
               keyExtractor={(item, index) => index.toString()}
-              getItem={getItem}
+              renderItem={({ item, index }) => (
+                <View className="flex-row justify-between items-center mb-2">
+                  <StyledText className="text-white">
+                    {item.firstName} {item.lastName} - {item.position}
+                  </StyledText>
+                  <TouchableOpacity onPress={() => removeStudent(index)} style={styles.deleteButton}>
+                    <Text style={styles.deleteButtonText}>Usuń</Text>
+                  </TouchableOpacity>
+                </View>
+              )}
             />
-          </View> 
-        </View>
-      </ScrollView>
+          )}
+        </StyledView>
+        <StyledTextInput
+          className="bg-gray-700 text-white mb-2 p-2 rounded"
+          placeholder="Imię"
+          placeholderTextColor="#999"
+          value={firstName}
+          onChangeText={setFirstName}
+        />
+        <StyledTextInput
+          className="bg-gray-700 text-white mb-2 p-2 rounded"
+          placeholder="Nazwisko"
+          placeholderTextColor="#999"
+          value={lastName}
+          onChangeText={setLastName}
+        />
+        <StyledTextInput
+          className="bg-gray-700 text-white mb-2 p-2 rounded"
+          placeholder="Nr stanowiska"
+          placeholderTextColor="#999"
+          value={position}
+          onChangeText={setPosition}
+        />
+        <TouchableOpacity onPress={addStudent} style={styles.addButton}>
+          <Text style={styles.addButtonText}>Dodaj</Text>
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.addButton}>
+          <Link href="/labConfiguration" style={styles.generateButton}>
+            <Text style={styles.generateButtonText} >Generuj listę</Text>
+          </Link>
+        </TouchableOpacity>
+      </StyledView>
     </SafeAreaView>
-  )
+  );
 }
 
-export default Registration
+const styles = StyleSheet.create({
+  addButton: {
+    backgroundColor: '#1E90FF',
+    padding: 10,
+    borderRadius: 5,
+    alignItems: 'center',
+    marginVertical: 10,
+  },
+  addButtonText: {
+    color: 'white',
+    fontSize: 16,
+  },
+  generateButton: {
+    backgroundColor: '#1E90FF',
+    padding: 10,
+    borderRadius: 5,
+    alignItems: 'center',
+    
+  },
+  generateButtonText: {
+    color: 'white',
+    fontSize: 16,
+  },
+  deleteButton: {
+    backgroundColor: '#FF6347',
+    padding: 5,
+    borderRadius: 5,
+  },
+  deleteButtonText: {
+    color: 'white',
+  },
+});

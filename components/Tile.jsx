@@ -3,9 +3,11 @@ import React from 'react'
 
 const Tile = ( {name, surname, onRemove, IDPC}) => {
   return (
-    <View>
-      <Text>{name} {surname} {IDPC}<Button title="X" onPress={onRemove}/>
-      </Text>
+    <View className="bg-tertiary flex flex-row">
+      <Text className="flex">{name} </Text>
+      <Text> {surname} </Text>
+      <Text>{IDPC}</Text>
+      <Button title="X" onPress={onRemove}/>
     </View>
   )
 }
