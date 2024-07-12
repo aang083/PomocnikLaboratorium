@@ -55,6 +55,11 @@ export default function LabConfiguration() {
             { label: '9', value: '9' },
             { label: '10', value: '10' },
           ]}
+          placeholder={{
+            label: 'Wybierz ilość zadań...',
+            value: null,
+            color: 'white',
+          }}
           style={{
             inputIOS: {
               color: 'white',
@@ -69,6 +74,9 @@ export default function LabConfiguration() {
               padding: 10,
               borderRadius: 5,
               marginVertical: 10,
+            },
+            placeholder: {
+              color: 'white',
             },
           }}
         />
@@ -124,8 +132,8 @@ export default function LabConfiguration() {
             />
             <TouchableOpacity style={styles.evaluateButton}>
             <Link href="/assessment" style={styles.evaluateButton}>
-              <Text style={styles.evaluateButtonText}>Oceniaj</Text>
-            </Link>
+                <Text style={styles.evaluateButtonText}>Oceniaj</Text>
+              </Link>
             </TouchableOpacity>
           </StyledView>
         )}
@@ -141,12 +149,11 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     alignItems: 'center',
     justifyContent: 'center',
-    
   },
   evaluateButtonText: {
     color: 'white',
     fontSize: 16,
     textAlign: 'center',
+    alignSelf: 'center',
   },
 });
-
