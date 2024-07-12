@@ -5,9 +5,10 @@ const AppLayout = () => {
   return (
     <Stack>
       <Stack.Screen name="index" options={{headerShown: false}} />
-      <Stack.Screen name="(labConfig)" options={{headerShown: false}} />
-      <Stack.Screen name="(studentAssessment)" options={{headerShown: false}} />
-      <Stack.Screen name="(studentRegister)" options={{headerShown: false}} />
+      <Stack.Screen name="labConfiguration" options={{headerShown: false}}/>
+      <Stack.Screen name="assessment" options={{headerShown: false}}/>
+      <Stack.Screen name="sectionAssassment" options={{headerShown: false}}/>
+      <Stack.Screen name="registration" options={{headerShown: false}} />
     </Stack>
   );
 }
