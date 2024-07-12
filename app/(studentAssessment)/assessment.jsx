@@ -1,23 +1,27 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { View, Text, FlatList, StyleSheet, SafeAreaView, TouchableOpacity } from 'react-native';
 import { Link } from 'expo-router';
 import { styled } from 'nativewind';
 import * as FileSystem from 'expo-file-system';
-import { useStudents } from '../context/StudentContext';
 
 const StyledView = styled(View);
 const StyledText = styled(Text);
 
+const positions = Array.from({ length: 10 }, (_, i) => i + 1);
+
 export default function Assessment() {
-  const { students } = useStudents();
-  const positions = Array.from(new Set(students.map(student => student.position)));
+  const [students, setStudents] = useState([
+    { id: '1', name: 'Student A', position: '1', tasks: [false, false, false] },
+    { id: '2', name: 'Student B', position: '2', tasks: [false, false, false] },
+    { id: '3', name: 'Student C', position: '3', tasks: [false, false, false] },
+  ]);
 
   const handleSave = async () => {
     const csvData = students.map((student) => ({
       position: student.position,
       name: student.name,
-      tasks: student.tasks ? student.tasks.join(', ') : '',
-      grade: student.tasks ? student.tasks.filter(Boolean).length + 2 : 0, // Example grading logic
+      tasks: student.tasks.join(', '),
+      grade: student.tasks.filter(Boolean).length + 2, // Example grading logic
     }));
     const csvString = [
       ['Position', 'Name', 'Task 1', 'Task 2', 'Task 3', 'Grade'],

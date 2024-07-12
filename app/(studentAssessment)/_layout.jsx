@@ -14,4 +14,4 @@ const AssassmentLayout = () => {
   )
 }
 
-export default AssassmentLayout;
+export default AssassmentLayout

@@ -4,7 +4,7 @@
     "slug": "PomocnikLaboratorium",
     "scheme": "pomocniklaboratorium",
     "version": "1.0.0",
-    "orientation": "default",
+    "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
     "splash": {
@@ -20,8 +20,7 @@
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
-      },
-      "orientations": ["portrait", "portrait-upside-down"]
+      }
     },
     "web": {
       "favicon": "./assets/favicon.png"

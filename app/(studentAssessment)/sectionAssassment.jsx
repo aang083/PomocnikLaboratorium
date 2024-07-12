@@ -50,8 +50,8 @@ export default function Assessment() {
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: '#1E1E1E' }}>
-      <StyledView className="flex-1 p-4 mt-10">
-        <StyledText className="text-white text-3xl mb-4">Ocenianie</StyledText>
+      <StyledView className="flex-1 p-4">
+        <StyledText className="text-white text-2xl mb-4">Ocenianie Sekcji {position}</StyledText>
         <FlatList
           data={positions}
           numColumns={2}
