@@ -1,33 +1,28 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, Button, FlatList, StyleSheet, TouchableOpacity, SafeAreaView } from 'react-native';
+import { View, Text, TextInput, FlatList, StyleSheet, TouchableOpacity, SafeAreaView } from 'react-native';
 import { styled } from 'nativewind';
 import { Link } from 'expo-router';
+import { useStudents } from '../../context/StudentContext';
 
 const StyledView = styled(View);
 const StyledText = styled(Text);
 const StyledTextInput = styled(TextInput);
 
-export default function registration() {
-  const [students, setStudents] = useState([]);
+export default function Registration() {
+  const { students, addStudent, removeStudent } = useStudents();
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
   const [position, setPosition] = useState('');
 
-  const addStudent = () => {
+  const handleAddStudent = () => {
     if (firstName && lastName && position) {
-      setStudents([...students, { firstName, lastName, position }]);
+      addStudent({ firstName, lastName, position });
       setFirstName('');
       setLastName('');
       setPosition('');
     } else {
       alert('Proszę wypełnić wszystkie pola');
     }
-  };
-
-  const removeStudent = (index) => {
-    const newStudents = [...students];
-    newStudents.splice(index, 1);
-    setStudents(newStudents);
   };
 
   return (
@@ -75,12 +70,12 @@ export default function registration() {
           value={position}
           onChangeText={setPosition}
         />
-        <TouchableOpacity onPress={addStudent} style={styles.addButton}>
+        <TouchableOpacity onPress={handleAddStudent} style={styles.addButton}>
           <Text style={styles.addButtonText}>Dodaj</Text>
         </TouchableOpacity>
         <TouchableOpacity style={styles.addButton}>
           <Link href="/labConfiguration" style={styles.generateButton}>
-            <Text style={styles.generateButtonText} >Generuj listę</Text>
+            <Text style={styles.generateButtonText}>Generuj listę</Text>
           </Link>
         </TouchableOpacity>
       </StyledView>
