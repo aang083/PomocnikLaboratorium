@@ -1,39 +1,34 @@
 import React, { useState } from 'react';
-import { View, Text, FlatList, StyleSheet, SafeAreaView, TouchableOpacity } from 'react-native';
-import { useRouter, useSearchParams } from 'expo-router';
-import CheckBox from '@react-native-community/checkbox';
+import { View, Text, FlatList, SafeAreaView, TouchableOpacity } from 'react-native';
+import { Link } from 'expo-router';
+// import { useRouter, useSearchParams } from 'expo-router';
+import { useRouter } from 'expo-router';
+// import CheckBox from '@react-native-community/checkbox';
 import { styled } from 'nativewind';
 
 const StyledView = styled(View);
 const StyledText = styled(Text);
 
 //TODO: nie widziałem jeszcze tego ekranu, nie wiem jak działa 
-const students = [
-  { id: '1', name: 'Student A', tasks: [false, false, false] },
-  { id: '2', name: 'Student B', tasks: [false, false, false] },
-];
 
 export default function SectionAssessment() {
   const router = useRouter();
-  const { position } = useSearchParams();
-  const [taskStatus, setTaskStatus] = useState(students);
-
-  const handleTaskChange = (studentIndex, taskIndex, value) => {
-    const newTaskStatus = [...taskStatus];
-    newTaskStatus[studentIndex].tasks[taskIndex] = value;
-    setTaskStatus(newTaskStatus);
-  };
-
-  const handleSave = () => {
-    // Here you would normally save the data
-    router.back();
-  };
-
+  const { section } = router.query;
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: '#1E1E1E' }}>
       <StyledView className="flex-1 p-4 mt-10">
-        <StyledText className="text-white text-3xl mb-4">Ocenianie Sekcji {position}</StyledText>
-        <FlatList
+        <StyledText className="text-white text-3xl mb-4">Ocenianie Sekcji {section}</StyledText>
+        <TouchableOpacity className="bg-blue-600 p-2.5 rounded-md items-center justify-center mt-2.5">
+          <Link href={`/assessment`} className="text-white text-lg text-center">
+            <Text className="text-white text-lg text-center">Akceptuj</Text>
+          </Link>
+        </TouchableOpacity>
+      </StyledView>
+    </SafeAreaView>
+  );
+}
+
+        {/* <FlatList
           data={taskStatus}
           keyExtractor={(item) => item.id}
           renderItem={({ item, index }) => (
@@ -51,28 +46,4 @@ export default function SectionAssessment() {
               </StyledView>
             </StyledView>
           )}
-        />
-        <TouchableOpacity onPress={handleSave} style={styles.saveButton}>
-          <Text style={styles.saveButtonText}>Akceptuj</Text>
-        </TouchableOpacity>
-      </StyledView>
-    </SafeAreaView>
-  );
-}
-
-const styles = StyleSheet.create({
-  saveButton: {
-    backgroundColor: '#1E90FF',
-    padding: 10,
-    borderRadius: 5,
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginTop: 10,
-  },
-  saveButtonText: {
-    color: 'white',
-    fontSize: 16,
-    textAlign: 'center',
-    alignSelf: 'center',
-  },
-});
+        /> */}

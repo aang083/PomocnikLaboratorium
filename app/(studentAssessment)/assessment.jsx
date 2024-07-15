@@ -7,13 +7,13 @@ import { useStudents } from '../../context/StudentContext';
 
 const StyledView = styled(View);
 const StyledText = styled(Text);
-
+//TODO: przekazanie numeru wybranej sekcji do ekranu sectionAssassment - nie działa :(
+//TODO: czyszczenie async po wygenerowanieu CSV, zmiana miejsca zapisu pliku CSV (obecnie nie da się do niego dostać)
 export default function Assessment() {
   const { students } = useStudents();
   const positions = Array.from(new Set(students.map(student => student.position)));
 
   const handleSave = async () => {
-    //TODO: czyszczenie async po wygenerowanieu CSV, zmiana miejsca zapisu pliku CSV (obecnie nie da się do niego dostać)
     const csvData = students.map((student) => ({
       position: student.position,
       name: student.name,
@@ -35,7 +35,7 @@ export default function Assessment() {
     await FileSystem.writeAsStringAsync(fileName, csvString);
     alert(`Zapisano plik: ${fileName}`);
   };
-//TODO: przekazanie numeru wybranej sekcji do ekranu sectionAssassment - nie działa :(
+
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: '#1E1E1E' }}>
       <StyledView className="flex-1 p-4 mt-10">
@@ -46,7 +46,7 @@ export default function Assessment() {
           keyExtractor={(item) => item.toString()}
           renderItem={({ item }) => (
             <TouchableOpacity className="flex-1 m-2.5 bg-blue-600 p-5 rounded-md items-center justify-center">
-              <Link href={`/studentAssessment/sectionAssessment?position=${item}`} className="text-white text-lg text-center">
+              <Link href={{ pathname: `/sectionAssassment`, params: { section: item } }} className="text-white text-lg text-center">
                 <Text className="text-white text-lg text-center">{item}</Text>
               </Link>
             </TouchableOpacity>
@@ -59,3 +59,4 @@ export default function Assessment() {
     </SafeAreaView>
   );
 }
+

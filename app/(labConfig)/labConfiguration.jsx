@@ -7,7 +7,7 @@ import { Link } from 'expo-router';
 
 const StyledView = styled(View);
 const StyledText = styled(Text);
-
+//TODO: wyskakuje error przy zmianie value 1 zadania
 export default function LabConfiguration() {
   const [taskCount, setTaskCount] = useState(0);
   const [tasks, setTasks] = useState([]);
