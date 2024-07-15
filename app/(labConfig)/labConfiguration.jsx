@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, FlatList, StyleSheet, SafeAreaView, TouchableOpacity } from 'react-native';
+import { View, Text, FlatList, SafeAreaView, TouchableOpacity } from 'react-native';
 import RNPickerSelect from 'react-native-picker-select';
 import { styled } from 'nativewind';
 import RadioButtonRN from 'radio-buttons-react-native';
@@ -130,9 +130,9 @@ export default function LabConfiguration() {
                 </StyledView>
               )}
             />
-            <TouchableOpacity style={styles.evaluateButton}>
-            <Link href="/assessment" style={styles.evaluateButton}>
-                <Text style={styles.evaluateButtonText}>Oceniaj</Text>
+            <TouchableOpacity className="bg-blue-600 p-2.5 rounded-md items-center justify-center">
+              <Link href="/assessment" className="bg-blue-600 p-2.5 rounded-md items-center justify-center">
+                <Text className="text-white text-base text-center self-center">Oceniaj</Text>
               </Link>
             </TouchableOpacity>
           </StyledView>
@@ -141,19 +141,3 @@ export default function LabConfiguration() {
     </SafeAreaView>
   );
 }
-
-const styles = StyleSheet.create({
-  evaluateButton: {
-    backgroundColor: '#1E90FF',
-    padding: 10,
-    borderRadius: 5,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  evaluateButtonText: {
-    color: 'white',
-    fontSize: 16,
-    textAlign: 'center',
-    alignSelf: 'center',
-  },
-});
