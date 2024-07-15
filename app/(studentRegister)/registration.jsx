@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, FlatList, StyleSheet, TouchableOpacity, SafeAreaView } from 'react-native';
+import { View, Text, TextInput, FlatList, TouchableOpacity, SafeAreaView } from 'react-native';
 import { styled } from 'nativewind';
 import { Link } from 'expo-router';
 import { useStudents } from '../../context/StudentContext';
@@ -41,8 +41,8 @@ export default function Registration() {
                   <StyledText className="text-white">
                     {item.firstName} {item.lastName} - {item.position}
                   </StyledText>
-                  <TouchableOpacity onPress={() => removeStudent(index)} style={styles.deleteButton}>
-                    <Text style={styles.deleteButtonText}>Usuń</Text>
+                  <TouchableOpacity onPress={() => removeStudent(index)} className="bg-red-500 p-1.5 rounded-md">
+                    <Text className="text-white">Usuń</Text>
                   </TouchableOpacity>
                 </View>
               )}
@@ -70,47 +70,15 @@ export default function Registration() {
           value={position}
           onChangeText={setPosition}
         />
-        <TouchableOpacity onPress={handleAddStudent} style={styles.addButton}>
-          <Text style={styles.addButtonText}>Dodaj</Text>
+        <TouchableOpacity onPress={handleAddStudent} className="bg-blue-600 p-2.5 rounded-md items-center my-2.5">
+          <Text className="text-white text-base">Dodaj</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.addButton}>
-          <Link href="/labConfiguration" style={styles.generateButton}>
-            <Text style={styles.generateButtonText}>Generuj listę</Text>
+        <TouchableOpacity className="bg-blue-600 p-2.5 rounded-md my-2.5 items-center justify-center">
+          <Link href="/labConfiguration" className="bg-blue-600 p-2.5 rounded-md">
+            <Text className="text-white text-base text-center self-center">Generuj listę</Text>
           </Link>
         </TouchableOpacity>
       </StyledView>
     </SafeAreaView>
   );
 }
-
-const styles = StyleSheet.create({
-  addButton: {
-    backgroundColor: '#1E90FF',
-    padding: 10,
-    borderRadius: 5,
-    alignItems: 'center',
-    marginVertical: 10,
-  },
-  addButtonText: {
-    color: 'white',
-    fontSize: 16,
-  },
-  generateButton: {
-    backgroundColor: '#1E90FF',
-    padding: 10,
-    borderRadius: 5,
-    alignItems: 'center',
-  },
-  generateButtonText: {
-    color: 'white',
-    fontSize: 16,
-  },
-  deleteButton: {
-    backgroundColor: '#FF6347',
-    padding: 5,
-    borderRadius: 5,
-  },
-  deleteButtonText: {
-    color: 'white',
-  },
-});

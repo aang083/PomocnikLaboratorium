@@ -7,6 +7,7 @@ import { styled } from 'nativewind';
 const StyledView = styled(View);
 const StyledText = styled(Text);
 
+//TODO: nie widziałem jeszcze tego ekranu, nie wiem jak działa 
 const students = [
   { id: '1', name: 'Student A', tasks: [false, false, false] },
   { id: '2', name: 'Student B', tasks: [false, false, false] },

@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, FlatList, StyleSheet, SafeAreaView, TouchableOpacity } from 'react-native';
+import { View, Text, FlatList, SafeAreaView, TouchableOpacity } from 'react-native';
 import { Link } from 'expo-router';
 import { styled } from 'nativewind';
 import * as FileSystem from 'expo-file-system';
@@ -13,6 +13,7 @@ export default function Assessment() {
   const positions = Array.from(new Set(students.map(student => student.position)));
 
   const handleSave = async () => {
+    //TODO: czyszczenie async po wygenerowanieu CSV, zmiana miejsca zapisu pliku CSV (obecnie nie da się do niego dostać)
     const csvData = students.map((student) => ({
       position: student.position,
       name: student.name,
@@ -34,7 +35,7 @@ export default function Assessment() {
     await FileSystem.writeAsStringAsync(fileName, csvString);
     alert(`Zapisano plik: ${fileName}`);
   };
-
+//TODO: przekazanie numeru wybranej sekcji do ekranu sectionAssassment - nie działa :(
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: '#1E1E1E' }}>
       <StyledView className="flex-1 p-4 mt-10">
@@ -44,47 +45,17 @@ export default function Assessment() {
           numColumns={2}
           keyExtractor={(item) => item.toString()}
           renderItem={({ item }) => (
-            <TouchableOpacity style={styles.positionButton}>
-              <Link href={`/studentAssessment/sectionAssessment?position=${item}`} style={styles.positionButtonText}>
-                <Text style={styles.positionButtonText}>{item}</Text>
+            <TouchableOpacity className="flex-1 m-2.5 bg-blue-600 p-5 rounded-md items-center justify-center">
+              <Link href={`/studentAssessment/sectionAssessment?position=${item}`} className="text-white text-lg text-center">
+                <Text className="text-white text-lg text-center">{item}</Text>
               </Link>
             </TouchableOpacity>
           )}
         />
-        <TouchableOpacity onPress={handleSave} style={styles.saveButton}>
-          <Text style={styles.saveButtonText}>Zapisz</Text>
+        <TouchableOpacity onPress={handleSave} className="bg-blue-600 p-2.5 rounded-md items-center justify-center mt-5">
+          <Text className="text-white text-base text-center">Zapisz</Text>
         </TouchableOpacity>
       </StyledView>
     </SafeAreaView>
   );
 }
-
-const styles = StyleSheet.create({
-  positionButton: {
-    flex: 1,
-    margin: 10,
-    backgroundColor: '#1E90FF',
-    padding: 20,
-    borderRadius: 5,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  positionButtonText: {
-    color: 'white',
-    fontSize: 20,
-    textAlign: 'center',
-  },
-  saveButton: {
-    backgroundColor: '#1E90FF',
-    padding: 10,
-    borderRadius: 5,
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginTop: 20,
-  },
-  saveButtonText: {
-    color: 'white',
-    fontSize: 16,
-    textAlign: 'center',
-  },
-});
