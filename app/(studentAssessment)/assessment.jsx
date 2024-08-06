@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, FlatList, SafeAreaView, TouchableOpacity } from 'react-native';
+import { View, Text, FlatList, SafeAreaView, TouchableOpacity, Alert } from 'react-native';
 import { Link } from 'expo-router';
 import { styled } from 'nativewind';
 import * as FileSystem from 'expo-file-system';
@@ -10,9 +10,10 @@ const StyledText = styled(Text);
 //TODO: przekazanie numeru wybranej sekcji do ekranu sectionAssassment - nie działa :(
 //TODO: czyszczenie async po wygenerowanieu CSV, zmiana miejsca zapisu pliku CSV (obecnie nie da się do niego dostać)
 export default function Assessment() {
-  const { students } = useStudents();
+  const { students, addSection } = useStudents();
   const positions = Array.from(new Set(students.map(student => student.position)));
 
+  //Funkcja zapisujaca do pliku CSV
   const handleSave = async () => {
     const csvData = students.map((student) => ({
       position: student.position,
@@ -46,9 +47,9 @@ export default function Assessment() {
           keyExtractor={(item) => item.toString()}
           renderItem={({ item }) => (
             <TouchableOpacity className="flex-1 m-2.5 bg-blue-600 p-5 rounded-md items-center justify-center">
-              <Link href={{ pathname: `/sectionAssassment`, params: { section: item } }} className="text-white text-lg text-center">
+              <Link href={{ pathname: `/section/[id]`, params:{ id: item}}} className="text-white text-lg text-center">
                 <Text className="text-white text-lg text-center">{item}</Text>
-              </Link>
+              </Link> 
             </TouchableOpacity>
           )}
         />

@@ -8,6 +8,7 @@ const AssassmentLayout = () => {
       <Stack>
         <Stack.Screen name="assessment" options={{headerShown: false}}/>
         <Stack.Screen name="sectionAssassment" options={{headerShown: false}}/>
+        <Stack.Screen name='section/[id]' options={{headerShown: false}}/>
       </Stack>
       <StatusBar backgroundColor='#161622' style='light'/>
     </>

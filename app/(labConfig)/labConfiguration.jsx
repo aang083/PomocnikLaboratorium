@@ -5,6 +5,7 @@ import { styled } from 'nativewind';
 import RadioButtonRN from 'radio-buttons-react-native';
 import { Link } from 'expo-router';
 
+
 const StyledView = styled(View);
 const StyledText = styled(Text);
 //TODO: wyskakuje error przy zmianie value 1 zadania
