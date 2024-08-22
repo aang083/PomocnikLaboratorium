@@ -5,18 +5,13 @@ const StudentContext = createContext();
 
 export const StudentProvider = ({ children }) => {
   const [students, setStudents] = useState([]);
-  const [selected, setSelected] = useState([]);
-  // const [tasks, setTasks] = useState([]); //TODO: możliwe że trzeba ogarnąć zapisywanie zadań do async żeby dało się oceniać
+  //TODO: możliwe że trzeba ogarnąć zapisywanie zadań do async żeby dało się oceniać
 
   useEffect(() => {
     const load = async () => {
       const storedStudents = await AsyncStorage.getItem("students");
       if (storedStudents) {
         setStudents(JSON.parse(storedStudents));
-      }
-      const selectedSection = await AsyncStorage.getItem("selected");
-      if (selectedSection) {
-        setSelected(JSON.parse(selectedSection));
       }
     };
     load();
@@ -28,12 +23,6 @@ export const StudentProvider = ({ children }) => {
     await AsyncStorage.setItem("students", JSON.stringify(newStudents));
   };
 
-  const addSection = async (idSection) => {
-    const newSectionList = [...selected, idSection];
-    setSelected(newSectionList);
-    await AsyncStorage.setItem("selected", JSON.stringify(newSectionList));
-  };
-
   const removeStudent = async (index) => {
     const newStudents = [...students];
     newStudents.splice(index, 1);
@@ -41,17 +30,8 @@ export const StudentProvider = ({ children }) => {
     await AsyncStorage.setItem("students", JSON.stringify(newStudents));
   };
 
-  const removeSection = async (index) => {
-    const newSectionList = [...selected];
-    newSectionList.splice(index, 1);
-    setSelected(newSectionList);
-    await AsyncStorage.setItem("selected", JSON.stringify(newSectionList));
-  };
-
   return (
-    <StudentContext.Provider
-      value={{ students, addStudent, removeStudent, addSection, removeSection }}
-    >
+    <StudentContext.Provider value={{ students, addStudent, removeStudent }}>
       {children}
     </StudentContext.Provider>
   );

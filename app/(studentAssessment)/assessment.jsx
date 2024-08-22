@@ -7,10 +7,10 @@ import { useStudents } from '../../context/StudentContext';
 
 const StyledView = styled(View);
 const StyledText = styled(Text);
-//TODO: przekazanie numeru wybranej sekcji do ekranu sectionAssassment - nie działa :(
+
 //TODO: czyszczenie async po wygenerowanieu CSV, zmiana miejsca zapisu pliku CSV (obecnie nie da się do niego dostać)
 export default function Assessment() {
-  const { students, addSection } = useStudents();
+  const { students } = useStudents();
   const positions = Array.from(new Set(students.map(student => student.position)));
 
   //Funkcja zapisujaca do pliku CSV
