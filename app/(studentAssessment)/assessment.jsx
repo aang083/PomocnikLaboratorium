@@ -47,7 +47,7 @@ export default function Assessment() {
           keyExtractor={(item) => item.toString()}
           renderItem={({ item }) => (
             <TouchableOpacity className="flex-1 m-2.5 bg-blue-600 p-5 rounded-md items-center justify-center">
-              <Link href={{ pathname: `/section/[id]`, params:{ id: item}}} className="text-white text-lg text-center">
+              <Link href={{ pathname: `/section/${item}`}} className="text-white text-lg text-center">
                 <Text className="text-white text-lg text-center">{item}</Text>
               </Link> 
             </TouchableOpacity>
