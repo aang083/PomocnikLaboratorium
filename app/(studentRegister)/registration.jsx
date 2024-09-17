@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, FlatList, TouchableOpacity, SafeAreaView } from 'react-native';
 import { styled } from 'nativewind';
-import { Link } from 'expo-router';
+import { useRouter, Link } from 'expo-router';
 import { useStudents } from '../../context/StudentContext';
 
 const StyledView = styled(View);
@@ -9,6 +9,7 @@ const StyledText = styled(Text);
 const StyledTextInput = styled(TextInput);
 
 export default function Registration() {
+  const router = useRouter();
   const { students, addStudent, removeStudent } = useStudents();
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
@@ -73,10 +74,11 @@ export default function Registration() {
         <TouchableOpacity onPress={handleAddStudent} className="bg-blue-600 p-2.5 rounded-md items-center my-2.5">
           <Text className="text-white text-base">Dodaj</Text>
         </TouchableOpacity>
-        <TouchableOpacity className="bg-blue-600 p-2.5 rounded-md my-2.5 items-center justify-center">
-          <Link href="/labConfiguration" className="bg-blue-600 p-2.5 rounded-md">
-            <Text className="text-white text-base text-center self-center">Generuj listę</Text>
-          </Link>
+        <TouchableOpacity className="bg-blue-600 p-2.5 rounded-md my-2.5 items-center justify-center" onPress={() => router.push('/labConfiguration')}>
+          {/* <Link href="/labConfiguration" className="bg-blue-600 p-2.5 rounded-md">
+            
+          </Link> */}
+          <Text className="text-white text-base text-center self-center">Generuj listę</Text>
         </TouchableOpacity>
       </StyledView>
     </SafeAreaView>

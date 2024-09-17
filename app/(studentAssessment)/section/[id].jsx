@@ -5,22 +5,18 @@ import { styled } from 'nativewind';
 import { useRouter, useLocalSearchParams } from 'expo-router';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useStudents } from '../../../context/StudentContext';
-// import Checkbox from '@react-native-community/checkbox'; // Importuj Checkbox
 
 const StyledView = styled(View);
 const StyledText = styled(Text);
 
 export default function Page() {
+  const router = useRouter();
   const { id } = useLocalSearchParams();
   const { students } = useStudents(); // Odczytanie studentów z kontekstu
 
   // Filtrowanie studentów dla konkretnej sekcji
   const filteredStudents = students.filter(student => student.position === id);
-  const [tasks, setTasks] = useState([
-    { id: 1, name: 'Zadanie 1', completed: false },
-    { id: 2, name: 'Zadanie 2', completed: false },
-    { id: 3, name: 'Zadanie 3', completed: false }
-  ]);
+  const [tasks, setTasks] = useState([]);
 
   const fetchTasksFromStorage = async () => {
     try {
@@ -32,6 +28,10 @@ export default function Page() {
       console.error('Błąd podczas odczytu zadań', e);
     }
   };
+
+  useEffect(() => {
+    fetchTasksFromStorage();
+  }, []);
   
   const toggleTaskCompletion = (id) => {
     setTasks(prevTasks =>
@@ -74,10 +74,8 @@ export default function Page() {
         </StyledView>
 
         {/* Przycisk Zapisz */}
-        <TouchableOpacity className="bg-red-600 p-2 rounded-md items-center justify-center mt-4">
-          <Link href={`/assessment`} className="text-white text-lg text-center">
-            <Text className="text-white text-lg text-center">Akceptuj</Text>
-          </Link>
+        <TouchableOpacity className="bg-red-600 p-2 rounded-md items-center justify-center mt-4" onPress={() => router.push('/assessment')}>
+          <Text className="text-white text-lg text-center">Akceptuj</Text>
         </TouchableOpacity>
       </StyledView>
     </SafeAreaView>

@@ -3,13 +3,14 @@ import { View, Text, FlatList, SafeAreaView, TouchableOpacity } from 'react-nati
 import RNPickerSelect from 'react-native-picker-select';
 import { styled } from 'nativewind';
 import RadioButtonRN from 'radio-buttons-react-native';
-import { Link } from 'expo-router';
+import { useRouter } from 'expo-router';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const StyledView = styled(View);
 const StyledText = styled(Text);
 
 export default function LabConfiguration() {
+  const router = useRouter();
   const [taskCount, setTaskCount] = useState(0);
   const [tasks, setTasks] = useState([]);
 
@@ -24,6 +25,7 @@ export default function LabConfiguration() {
       const jsonValue = JSON.stringify(tasks); // Zapisuje tablicę zadań i ocen
       await AsyncStorage.setItem('labTasks', jsonValue);
       console.log('Zadania zostały zapisane');
+      router.push('/assessment');
     } catch (e) {
       console.error('Błąd podczas zapisywania zadań', e);
     }
@@ -35,6 +37,7 @@ export default function LabConfiguration() {
       setTaskCount(count);
       const newTasks = Array.from({ length: count }, (_, index) => ({
         id: index + 1,
+        name: 'Zadanie '+ (index+1),
         grade: '',
       }));
       setTasks(newTasks);
@@ -142,9 +145,7 @@ export default function LabConfiguration() {
               )}
             />
             <TouchableOpacity className="bg-blue-600 p-2.5 rounded-md items-center justify-center" onPress={saveTasksToStorage}>
-              <Link href="/assessment" className="bg-blue-600 p-2.5 rounded-md items-center justify-center">
                 <Text className="text-white text-base text-center self-center">Oceniaj</Text>
-              </Link>
             </TouchableOpacity>
           </StyledView>
         )}
