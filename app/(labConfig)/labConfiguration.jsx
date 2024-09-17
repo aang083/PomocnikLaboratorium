@@ -4,11 +4,11 @@ import RNPickerSelect from 'react-native-picker-select';
 import { styled } from 'nativewind';
 import RadioButtonRN from 'radio-buttons-react-native';
 import { Link } from 'expo-router';
-
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const StyledView = styled(View);
 const StyledText = styled(Text);
-//TODO: wyskakuje error przy zmianie value 1 zadania
+
 export default function LabConfiguration() {
   const [taskCount, setTaskCount] = useState(0);
   const [tasks, setTasks] = useState([]);
@@ -18,6 +18,16 @@ export default function LabConfiguration() {
     { label: 'Ocena: 4', value: '4' },
     { label: 'Ocena: 5', value: '5' },
   ];
+
+  const saveTasksToStorage = async () => {
+    try {
+      const jsonValue = JSON.stringify(tasks); // Zapisuje tablicę zadań i ocen
+      await AsyncStorage.setItem('labTasks', jsonValue);
+      console.log('Zadania zostały zapisane');
+    } catch (e) {
+      console.error('Błąd podczas zapisywania zadań', e);
+    }
+  };
 
   const handleTaskCountChange = (value) => {
     const count = parseInt(value, 10);
@@ -131,7 +141,7 @@ export default function LabConfiguration() {
                 </StyledView>
               )}
             />
-            <TouchableOpacity className="bg-blue-600 p-2.5 rounded-md items-center justify-center">
+            <TouchableOpacity className="bg-blue-600 p-2.5 rounded-md items-center justify-center" onPress={saveTasksToStorage}>
               <Link href="/assessment" className="bg-blue-600 p-2.5 rounded-md items-center justify-center">
                 <Text className="text-white text-base text-center self-center">Oceniaj</Text>
               </Link>

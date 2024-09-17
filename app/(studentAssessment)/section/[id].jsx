@@ -4,33 +4,35 @@ import { Link } from "expo-router";
 import { styled } from 'nativewind';
 import { useRouter, useLocalSearchParams } from 'expo-router';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useStudents } from '../../../context/StudentContext';
+// import Checkbox from '@react-native-community/checkbox'; // Importuj Checkbox
 
 const StyledView = styled(View);
 const StyledText = styled(Text);
 
 export default function Page() {
   const { id } = useLocalSearchParams();
-  const [students, setStudents] = useState([]);
+  const { students } = useStudents(); // Odczytanie studentów z kontekstu
+
+  // Filtrowanie studentów dla konkretnej sekcji
+  const filteredStudents = students.filter(student => student.position === id);
   const [tasks, setTasks] = useState([
     { id: 1, name: 'Zadanie 1', completed: false },
     { id: 2, name: 'Zadanie 2', completed: false },
     { id: 3, name: 'Zadanie 3', completed: false }
   ]);
 
-  // Pobieranie danych studentów z AsyncStorage
-  useEffect(() => {
-    const fetchStudents = async () => {
-      try {
-        const jsonValue = await AsyncStorage.getItem('students');
-        setStudents(jsonValue != null ? JSON.parse(jsonValue) : []);
-      } catch (e) {
-        console.error(e);
+  const fetchTasksFromStorage = async () => {
+    try {
+      const jsonValue = await AsyncStorage.getItem('labTasks');
+      if (jsonValue != null) {
+        setTasks(JSON.parse(jsonValue)); // Ustawia zadania w stanie
       }
-    };
-
-    fetchStudents();
-  }, []);
-
+    } catch (e) {
+      console.error('Błąd podczas odczytu zadań', e);
+    }
+  };
+  
   const toggleTaskCompletion = (id) => {
     setTasks(prevTasks =>
       prevTasks.map(task =>
@@ -47,14 +49,14 @@ export default function Page() {
         {/* Sekcja z listą studentów */}
         <StyledText className="text-gray-300 mb-2">Skład sekcji:</StyledText>
         <StyledView className="bg-gray-300 p-2 mb-4 rounded">
-          {students.length > 0 ? (
+          {filteredStudents.length > 0 ? (
             <FlatList
-              data={students}
-              renderItem={({ item }) => <Text>{item.name}</Text>}
+              data={filteredStudents}
+              renderItem={({ item }) => <Text>{item.firstName} {item.lastName}</Text>}
               keyExtractor={(item, index) => index.toString()}
             />
           ) : (
-            <Text>Brak zapisanych studentów</Text>
+            <Text>Brak studentów przypisanych do tej sekcji</Text>
           )}
         </StyledView>
 
