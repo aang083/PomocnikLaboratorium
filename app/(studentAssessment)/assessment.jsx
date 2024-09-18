@@ -32,6 +32,27 @@ export default function Assessment() {
       return [];
     }
   };
+
+  // Funkcja do obliczenia oceny
+  const calculateGrade = (taskGrades, completedTasks) => {
+    const gradeLevels = [...new Set(taskGrades)]; // Zbiera unikalne oceny (np. 3, 4, 5)
+    let finalGrade = 0;
+
+    for (const grade of gradeLevels) {
+      // Znajdź indeksy zadań przypisanych do danej oceny
+      const tasksForGrade = taskGrades
+        .map((taskGrade, idx) => (taskGrade === grade ? completedTasks[idx] === '1' : false))
+        .filter(Boolean);
+
+      // Jeśli wszystkie zadania przypisane do danej oceny zostały wykonane
+      if (tasksForGrade.length === taskGrades.filter(g => g === grade).length) {
+        finalGrade = parseInt(grade); // Ustawiamy maksymalną ocenę
+      }
+    }
+
+    return finalGrade; // Zwraca najwyższą ocenę, dla której wszystkie zadania zostały wykonane
+  };
+
   // Funkcja zapisująca do pliku CSV z wykorzystaniem Storage Access Framework na Androidzie
   const handleSave = async () => {
     const csvData = await Promise.all(
@@ -40,17 +61,15 @@ export default function Assessment() {
         const taskGrades = tasks.map(task => task.grade || '0'); // Pobieramy oceny dla zadań
         const completedTasks = tasks.map(task => task.completed ? '1' : '0'); // Pobieramy status ukończenia zadań
 
-        // Znajdujemy maksymalną ocenę spośród wykonanych zadań
-        const maxGrade = Math.max(
-          ...taskGrades.map((grade, idx) => (completedTasks[idx] === '1' ? parseInt(grade) : 0))
-        );
+        // Obliczamy ocenę na podstawie wykonanych zadań
+        const totalGrade = calculateGrade(taskGrades, completedTasks);
 
         return {
           position: student.position,
           name: `${student.firstName} ${student.lastName}`,
           tasks: completedTasks,
           grades: taskGrades,
-          totalGrade: maxGrade // Zamiast sumy wybieramy maksymalną ocenę
+          totalGrade: totalGrade // Przypisujemy obliczoną ocenę
         };
       })
     );
