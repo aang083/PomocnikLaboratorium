@@ -5,7 +5,6 @@ const StudentContext = createContext();
 
 export const StudentProvider = ({ children }) => {
   const [students, setStudents] = useState([]);
-  //TODO: możliwe że trzeba ogarnąć zapisywanie zadań do async żeby dało się oceniać
 
   useEffect(() => {
     const load = async () => {
@@ -31,7 +30,9 @@ export const StudentProvider = ({ children }) => {
   };
 
   return (
-    <StudentContext.Provider value={{ students, addStudent, removeStudent }}>
+    <StudentContext.Provider
+      value={{ students, setStudents, addStudent, removeStudent }}
+    >
       {children}
     </StudentContext.Provider>
   );

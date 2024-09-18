@@ -42,7 +42,7 @@ export default function Page() {
     try {
       const jsonValue = await AsyncStorage.getItem('labTasks');
       if (jsonValue != null) {
-        return JSON.parse(jsonValue); // Zwraca zadania z LabConfiguration
+        return JSON.parse(jsonValue); // Zwraca zadania z LabConfiguration wraz z ocenami
       } else {
         return [];
       }
@@ -61,13 +61,14 @@ export default function Page() {
     } else {
       // Jeśli nie ma zadań dla tej sekcji, pobierz domyślne zadania z LabConfiguration
       const defaultTasks = await fetchDefaultTasksFromStorage();
-      setTasks(defaultTasks);
+      setTasks(defaultTasks); // Ustaw zadania z przypisanymi ocenami z LabConfiguration
       if (defaultTasks.length > 0) {
         saveSectionTasks(id, defaultTasks); // Zapisz domyślne zadania w AsyncStorage
       }
     }
   };
 
+  // Aktualizacja ukończenia zadania
   const handleTaskCompletionToggle = (taskId) => {
     const updatedTasks = tasks.map(task =>
       task.id === taskId ? { ...task, completed: !task.completed } : task

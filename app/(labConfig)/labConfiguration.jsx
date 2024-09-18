@@ -5,12 +5,14 @@ import { styled } from 'nativewind';
 import RadioButtonRN from 'radio-buttons-react-native';
 import { useRouter } from 'expo-router';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useStudents } from '../../context/StudentContext';  // Importujemy kontekst studentów
 
 const StyledView = styled(View);
 const StyledText = styled(Text);
 
 export default function LabConfiguration() {
   const router = useRouter();
+  const { students, setStudents } = useStudents();  // Pobieramy listę studentów i funkcję do ich aktualizacji
   const [taskCount, setTaskCount] = useState(0);
   const [tasks, setTasks] = useState([]);
 
@@ -22,9 +24,25 @@ export default function LabConfiguration() {
 
   const saveTasksToStorage = async () => {
     try {
-      const jsonValue = JSON.stringify(tasks); // Zapisuje tablicę zadań i ocen
+      const jsonValue = JSON.stringify(tasks); // Zapisuje tablicę zadań i ocen do AsyncStorage (może być użyteczne w przyszłości)
       await AsyncStorage.setItem('labTasks', jsonValue);
-      console.log('Zadania zostały zapisane');
+
+      // Przypisujemy zadania do każdego studenta
+      const updatedStudents = students.map(student => ({
+        ...student,
+        tasks: tasks.map(task => ({ 
+          id: task.id, 
+          name: task.name, 
+          grade: task.grade, 
+          completed: false  // Zadanie początkowo nie jest ukończone
+        }))
+      }));
+
+      // Zaktualizowanie studentów z przypisanymi zadaniami
+      setStudents(updatedStudents);
+      await AsyncStorage.setItem('students', JSON.stringify(updatedStudents)); // Zapisujemy studentów z zadaniami w AsyncStorage
+      
+      console.log('Zadania zostały przypisane do studentów i zapisane');
       router.push('/assessment');
     } catch (e) {
       console.error('Błąd podczas zapisywania zadań', e);
