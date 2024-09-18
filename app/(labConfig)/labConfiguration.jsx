@@ -3,12 +3,16 @@ import { View, Text, FlatList, SafeAreaView, TouchableOpacity } from 'react-nati
 import RNPickerSelect from 'react-native-picker-select';
 import { styled } from 'nativewind';
 import RadioButtonRN from 'radio-buttons-react-native';
-import { Link } from 'expo-router';
+import { useRouter } from 'expo-router';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useStudents } from '../../context/StudentContext';  // Importujemy kontekst studentów
 
 const StyledView = styled(View);
 const StyledText = styled(Text);
 
 export default function LabConfiguration() {
+  const router = useRouter();
+  const { students, setStudents } = useStudents();  // Pobieramy listę studentów i funkcję do ich aktualizacji
   const [taskCount, setTaskCount] = useState(0);
   const [tasks, setTasks] = useState([]);
 
@@ -18,12 +22,40 @@ export default function LabConfiguration() {
     { label: 'Ocena: 5', value: '5' },
   ];
 
+  const saveTasksToStorage = async () => {
+    try {
+      const jsonValue = JSON.stringify(tasks); // Zapisuje tablicę zadań i ocen do AsyncStorage (może być użyteczne w przyszłości)
+      await AsyncStorage.setItem('labTasks', jsonValue);
+
+      // Przypisujemy zadania do każdego studenta
+      const updatedStudents = students.map(student => ({
+        ...student,
+        tasks: tasks.map(task => ({ 
+          id: task.id, 
+          name: task.name, 
+          grade: task.grade, 
+          completed: false  // Zadanie początkowo nie jest ukończone
+        }))
+      }));
+
+      // Zaktualizowanie studentów z przypisanymi zadaniami
+      setStudents(updatedStudents);
+      await AsyncStorage.setItem('students', JSON.stringify(updatedStudents)); // Zapisujemy studentów z zadaniami w AsyncStorage
+      
+      console.log('Zadania zostały przypisane do studentów i zapisane');
+      router.push('/assessment');
+    } catch (e) {
+      console.error('Błąd podczas zapisywania zadań', e);
+    }
+  };
+
   const handleTaskCountChange = (value) => {
     const count = parseInt(value, 10);
     if (!isNaN(count)) {
       setTaskCount(count);
       const newTasks = Array.from({ length: count }, (_, index) => ({
         id: index + 1,
+        name: 'Zadanie '+ (index+1),
         grade: '',
       }));
       setTasks(newTasks);
@@ -130,10 +162,8 @@ export default function LabConfiguration() {
                 </StyledView>
               )}
             />
-            <TouchableOpacity className="bg-blue-600 p-2.5 rounded-md items-center justify-center">
-              <Link href="/assessment" className="bg-blue-600 p-2.5 rounded-md items-center justify-center">
+            <TouchableOpacity className="bg-blue-600 p-2.5 rounded-md items-center justify-center" onPress={saveTasksToStorage}>
                 <Text className="text-white text-base text-center self-center">Oceniaj</Text>
-              </Link>
             </TouchableOpacity>
           </StyledView>
         )}

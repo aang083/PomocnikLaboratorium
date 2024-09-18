@@ -7,13 +7,13 @@ export const StudentProvider = ({ children }) => {
   const [students, setStudents] = useState([]);
 
   useEffect(() => {
-    const loadStudents = async () => {
+    const load = async () => {
       const storedStudents = await AsyncStorage.getItem("students");
       if (storedStudents) {
         setStudents(JSON.parse(storedStudents));
       }
     };
-    loadStudents();
+    load();
   }, []);
 
   const addStudent = async (student) => {
@@ -30,7 +30,9 @@ export const StudentProvider = ({ children }) => {
   };
 
   return (
-    <StudentContext.Provider value={{ students, addStudent, removeStudent }}>
+    <StudentContext.Provider
+      value={{ students, setStudents, addStudent, removeStudent }}
+    >
       {children}
     </StudentContext.Provider>
   );
