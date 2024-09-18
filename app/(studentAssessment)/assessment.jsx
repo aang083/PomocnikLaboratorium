@@ -23,29 +23,39 @@ export default function Assessment() {
       console.error('Błąd podczas czyszczenia AsyncStorage:', e);
     }
   };
-
+  const getSectionTasks = async (sectionId) => {
+    try {
+      const jsonValue = await AsyncStorage.getItem(`sectionTasks_${sectionId}`);
+      return jsonValue != null ? JSON.parse(jsonValue) : [];
+    } catch (e) {
+      console.error('Błąd podczas odczytu zadań:', e);
+      return [];
+    }
+  };
   // Funkcja zapisująca do pliku CSV z wykorzystaniem Storage Access Framework na Androidzie
   const handleSave = async () => {
-    const maxTasks = Math.max(...students.map(student => student.tasks.length || 0));
+    const csvData = await Promise.all(
+      students.map(async (student) => {
+        const tasks = await getSectionTasks(student.position); // Pobieramy zadania z AsyncStorage dla konkretnego stanowiska
+        const taskGrades = tasks.map(task => task.grade || '0'); // Pobieramy oceny dla zadań
+        const completedTasks = tasks.map(task => task.completed ? '1' : '0'); // Pobieramy status ukończenia zadań
 
-    const csvData = students.map((student) => {
-      const tasks = student.tasks || [];
-      const taskGrades = [];
-      const completedTasks = tasks.map((task, index) => {
-        taskGrades.push(task.grade || '0');
-        return task.completed ? '1' : '0';
-      });
+        // Znajdujemy maksymalną ocenę spośród wykonanych zadań
+        const maxGrade = Math.max(
+          ...taskGrades.map((grade, idx) => (completedTasks[idx] === '1' ? parseInt(grade) : 0))
+        );
 
-      const totalGrade = taskGrades.reduce((acc, grade, idx) => acc + (completedTasks[idx] === '1' ? parseInt(grade) : 0), 0);
+        return {
+          position: student.position,
+          name: `${student.firstName} ${student.lastName}`,
+          tasks: completedTasks,
+          grades: taskGrades,
+          totalGrade: maxGrade // Zamiast sumy wybieramy maksymalną ocenę
+        };
+      })
+    );
 
-      return {
-        position: student.position,
-        name: `${student.firstName} ${student.lastName}`,
-        tasks: completedTasks,
-        grades: taskGrades,
-        totalGrade: totalGrade
-      };
-    });
+    const maxTasks = Math.max(...csvData.map(row => row.tasks.length));
 
     const csvString = [
       ['Position', 'Name', ...Array.from({ length: maxTasks }, (_, i) => `Task ${i + 1}`), 'Grade'],
@@ -71,7 +81,8 @@ export default function Assessment() {
 
         await FileSystem.StorageAccessFramework.writeAsStringAsync(fileUri, csvString);
         alert(`Zapisano plik: ${fileUri}`);
-        clearStorage(); // Czyszczenie AsyncStorage po zapisaniu pliku
+        clearStorage(); // Czyszczenie AsyncStorage i resetowanie stanu studentów
+
         // Po zapisaniu wracamy do ekranu startowego
         router.replace('/'); // Nawigacja do ekranu startowego
       } else {
@@ -82,7 +93,6 @@ export default function Assessment() {
       alert('Błąd podczas zapisywania pliku');
     }
   };
-
   // Funkcja wywołująca alert przed zapisem pliku CSV
   const showSaveConfirmation = () => {
     Alert.alert(
