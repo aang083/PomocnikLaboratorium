@@ -75,9 +75,6 @@ export default function Registration() {
           <Text className="text-white text-base">Dodaj</Text>
         </TouchableOpacity>
         <TouchableOpacity className="bg-blue-600 p-2.5 rounded-md my-2.5 items-center justify-center" onPress={() => router.push('/labConfiguration')}>
-          {/* <Link href="/labConfiguration" className="bg-blue-600 p-2.5 rounded-md">
-            
-          </Link> */}
           <Text className="text-white text-base text-center self-center">Generuj listę</Text>
         </TouchableOpacity>
       </StyledView>
